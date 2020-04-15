@@ -8,6 +8,7 @@ app/logs/prod.log
  
 
 app/config/local_parameters.yml
+app/config/parameters_old.yml
 app/config/parameters.yml
 app/config/parameters.ini
 
