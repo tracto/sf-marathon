@@ -1,0 +1,36 @@
+
+<div class="form-wrapper">
+   {{ form_start(formUser, {'attr': {'class': 'form-horizontal'}}) }}
+
+    {{ form_errors(formUser) }}
+
+    <div class="form-group">
+      <div class="form-flex justify-center">
+        {{ form_label(formUser.joggeur, "Joggeur lié", {'label_attr': {'class': 'form-label control-label'}}) }}
+        {{ form_errors(formUser.joggeur) }}
+        <div class="form-widget">
+          {{ form_widget(formUser.joggeur, {'attr': {'class': 'form-control'}}) }}
+        </div>
+      </div>
+
+      <div class="form-flex justify-center mv3">
+        <div class="self-center mr2">
+          <span>Le joggeur n'existe pas encore ?</span>
+        </div>
+
+        <a class='button button-action' href="{{ path('tds_marathon_joggeur_add') }}">
+          <svg class="icon icon--xs icon-plus"><use xlink:href="#icon-plus"></use></svg>
+          <span>créer un joggeur</span>
+        </a>
+      </div>
+    </div>
+     
+    <div class="tc">
+      <div class="button button-save">
+        <svg class="icon icon--xs icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+           {{ form_widget(formUser.save, {'attr': {'class': ''}}) }}
+      </div>
+    </div>
+
+  {{ form_end(formUser) }} 
+</div>

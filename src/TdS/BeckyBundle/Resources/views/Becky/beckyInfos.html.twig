@@ -1,0 +1,11 @@
+
+
+{{ beckyInfos.info | raw }}
+
+{% if is_granted("ROLE_SUPER_ADMIN") %}
+		<a class="button" href="{{ path('tds_becky_liste_phrases') }}">
+			<svg class="icon icon--xs"><use xlink:href="#icon-notebook-list"></use></svg>
+			<span class="">liste des phrases</span>
+		</a>
+
+{% endif %}

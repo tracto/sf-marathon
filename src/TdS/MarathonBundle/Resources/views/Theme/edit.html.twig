@@ -1,0 +1,19 @@
+{% extends "TdSMarathonBundle::layout.html.twig" %}
+
+{% block title %}
+  Marathon - {{ parent() }}
+{% endblock %}
+
+{% block tdsmarathon_body %}
+	<div id="content" class="form-container">
+	    <h1 class="ms-title">
+			<svg class="self-center icon icon--s fill-near-black"><use xlink:href="#icon-pencil"></use></svg>
+			<span class="self-center">Modifier un thème </span>
+
+		</h1>
+	    {% if app.request.get('_route') != app.request.headers.get('referer') %}    
+	    	<input type="hidden" name="_target_path" value="{{ app.request.headers.get('referer') }}" />    
+		{% endif %}
+	    {{ include('TdSMarathonBundle:Theme:form.html.twig') }}
+ 	</div>
+{% endblock %}

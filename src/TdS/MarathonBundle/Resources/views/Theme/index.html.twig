@@ -1,0 +1,50 @@
+{% extends "TdSMarathonBundle::layout.html.twig" %}
+
+{% block title %}
+  Marathon - {{ parent() }}
+{% endblock %}
+
+{% block tdsmarathon_body %}
+	<div class="container-fluid main-content-page pbxxl">
+		{% if is_granted("ROLE_SUPER_ADMIN") %}
+			<div class="mtm mrm mbn clearfix">
+				<a class="button btn btn-action pull-right mls" href="{{ path('tds_marathon_saison_add') }}">
+					<svg class="icon icon--s icon-plus"><use xlink:href="#icon-plus"></use></svg>
+					<span>Ajouter une saison</span>
+				</a>
+				<a class="button btn btn-action pull-right " href="{{ path('tds_marathon_theme_add') }}" >
+					<svg class="icon icon--s icon-plus"><use xlink:href="#icon-plus"></use></svg>
+					<span>Ajouter un theme</span>
+				</a>
+			</div>
+		{% endif %}
+
+	    <h1 class="main-title align-center mas">Thèmes</h1>
+
+	    {% for saison in listeSaisons %}
+	    	<div class="man mtl ptl sep--dashed">
+		    	<h2 class="sub-title align-center pan man">{{ saison.titre }}</h2>
+		    	{% if saison.activate is defined and saison.activate == 1 %}
+		    		<h4 class="sub-sub-title align-center pan man">(en cours)</h4>
+		    	{% endif %}
+	    	</div>
+		    <div class='row list pbm pal'>	
+			    {% for theme in saison.themes %}
+			      	{{ vignetteModule.vignette(theme) }}
+			    {% endfor %} 
+			</div> 
+		{% endfor %} 
+
+		{% if is_granted("ROLE_SUPER_ADMIN") %}
+			<div class='popup-delete-confirmation' data-popupdelete>
+	            <div>
+	                <p></p>
+	                <a id="btn-oui" href="" class="button btn btn-action btn-default btn-delete-oui">Oui</a>
+	                <a id="btn-non" href="" class="button btn btn-action btn-default btn-delete-non">Non</a>
+	            </div>
+	        </div>
+    	{% endif %}
+	</div>
+{% endblock %}
+
+

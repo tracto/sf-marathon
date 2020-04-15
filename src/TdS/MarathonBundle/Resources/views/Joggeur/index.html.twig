@@ -1,0 +1,36 @@
+{% extends "TdSMarathonBundle::layout.html.twig" %}
+
+{% block title %}
+  Marathon - {{ parent() }}
+{% endblock %}
+
+{% block tdsmarathon_body %}
+	<div class="pb4">
+
+		{% if is_granted("ROLE_SUPER_ADMIN") %}
+			<div class="pt3">
+				<a class="button" href="{{ path('tds_marathon_joggeur_add') }}" >
+					<svg class="icon icon--xs"><use xlink:href="#icon-plus"></use></svg>
+					<span>Ajouter un joggeur</span>
+				</a>
+			</div>
+		{% endif %}
+
+		<div class="w-60-ns center tc">
+			<div class="ms-title pt4 pb5 flex-1">					
+		    	<h2><span class="db">Les joggeurs</span></h2>	
+		    </div>
+		</div>
+						    
+	    <div class="flex flex-auto flex-wrap">
+		    {% for joggeur in listeJoggeurs %}
+		    	{% if joggeur is not null %}
+			    	<div class='w-50 w-33-sm w-20-m w-10-l pa1'>
+					    {{ vignetteModule.vignette_joggeur(joggeur) }}
+					</div>
+			    {% endif %}
+		    {% endfor %}
+		</div>
+
+	</div> 
+{% endblock %}

@@ -1,0 +1,15 @@
+{{ form_start(form) }}      
+      <div class="w-100 flex flex-auto flex-wrap justify-center">{# w-100 w-60-m w-80-l #} 
+        {{ form_errors(form.content) }}
+        
+        {{ form_widget(form.content, {'attr': {'class': 'form-hotfresh w-70'}}) }}
+        
+      
+
+        <div class="button button-action w-30">
+          <svg class="icon icon--s icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+           <button class="bg-transparent bn ms-fushia" type="submit" value="Valider" data-action="submit-hotfresh">Valider</button>
+        </div>
+    </div>
+
+  {{ form_end(form) }}

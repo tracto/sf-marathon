@@ -1,0 +1,66 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+        TdS\UserBundle\Entity\User: sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        main:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main_login:
+            pattern: ^/login$
+            anonymous: true
+        main:
+            pattern:    ^/
+            anonymous: true
+            provider:  main
+            form_login:
+                login_path: fos_user_security_login
+                check_path: fos_user_security_check
+                always_use_default_target_path : true
+                default_target_path: /dashboard
+                use_referer : true
+            logout:
+                path: fos_user_security_logout
+                target: /
+            remember_me:
+                key: %secret%
+
+
+    access_control:
+        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: ^/joggeur/add/, roles: ROLE_ADMIN } 
+        - { path: ^/joggeur/edit/, roles: ROLE_USER }
+        - { path: ^/joggeur/addpoints/, roles: ROLE_USER }
+        - { path: ^/joggeur/delete/, roles: ROLE_ADMIN }
+        - { path: ^/theme/add, roles: ROLE_USER }
+        - { path: ^/theme/edit/, roles: ROLE_USER }
+        - { path: ^/theme/delete/, roles: ROLE_ADMIN }
+        - { path: ^/theme/switch, roles: ROLE_ADMIN }
+        - { path: ^/theme/addchronique/, roles: ROLE_USER }
+        - { path: ^/theme/editchronique/, roles: ROLE_USER } 
+        - { path: ^/theme/compils/view/, roles: ROLE_ADMIN } 
+        - { path: ^/theme/compil/create/, roles: ROLE_ADMIN } 
+        - { path: ^/joggeurs/classement/, roles: ROLE_USER }
+        - { path: ^/saisons, roles: ROLE_ADMIN }
+        - { path: ^/saison/switch, roles: ROLE_ADMIN }
+        - { path: ^/becky/liste, roles: ROLE_ADMIN }
+        - { path: ^/article/add, roles: ROLE_ADMIN }
+        - { path: ^/article/edit/, roles: ROLE_ADMIN }
+        - { path: ^/article/delete/, roles: ROLE_ADMIN }
+        - { path: ^/musictitle/, roles: ROLE_USER }
+
+

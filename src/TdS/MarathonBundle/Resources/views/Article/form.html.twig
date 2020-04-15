@@ -1,0 +1,44 @@
+<div class="form-wrapper">
+
+   {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+    {{ form_errors(form) }}
+    <input type="hidden" name="_target_path" value="{{ app.request.headers.get('referer') }}" />
+    
+    <div class="form-group form-flex form-input-title f4">
+      {{ form_label(form.titre, "titre", {'label_attr': {'class': 'form-label  control-label'}}) }}
+      {{ form_errors(form.titre) }}
+      <div class="form-widget w-100 w-70-ns">
+        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+
+
+
+    <div class="form-group form-flex">
+        {{ form_label(form.image, "Ajouter une image", {'label_attr': {'class': 'form-label  control-label'}}) }}
+        
+        <div class='form-widget'>
+          {{ form_widget(form.image,{'attr':{'class':''}}) }}
+        </div>
+    </div>
+
+    <div class="form-group form-flex">
+      {{ form_label(form.contenu, "contenu", {'label_attr': {'class': 'form-label  control-label'}}) }}
+      {{ form_errors(form.contenu) }}
+      <div class="form-widget w-100 w-70-ns">
+        {{ form_widget(form.contenu) }}
+      </div>
+    </div>
+
+    
+    <div class="center tc">
+        <div class="button button-save">
+          <svg class="icon icon--xs icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+           {{ form_widget(form.valider, {'attr': {'class': '','value':'valider'}}) }}
+        </div>
+    </div>
+   
+
+  {{ form_end(form) }} 
+</div>

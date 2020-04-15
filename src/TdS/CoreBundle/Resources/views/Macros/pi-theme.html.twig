@@ -1,0 +1,175 @@
+{% macro theme(saison, theme, draftmodeTheme, joggeurForDraftmodeTheme) %}
+	{% if saison is defined and saison is not null %}
+		<div class="pa3">			
+			<div class="">
+				<h4 class="fw4 ma0 pa0 f5">Thème en attente</h4>									
+					{% if is_granted("ROLE_SUPER_ADMIN")  %}
+						{% if draftmodeTheme is not null %}
+		        			<div class="mv2">
+								<svg class="icon icon--s icon-checkmark dib v-mid"><use xlink:href="#icon-checkmark"></use></svg>
+								<span class="dib v-mid">Il y a un thème en attente</span>
+							</div>
+							{% if joggeurForDraftmodeTheme == app.user.joggeur %}
+								<a class="button" href="{{ path('tds_marathon_theme_edit_draftmode', {'id': draftmodeTheme.id}) }}">
+										<svg class="icon icon--s icon-pencil"><use xlink:href="#icon-pencil"></use></svg>
+										<span class="">Modifier le thème d'attente</span>
+								</a>
+							{% endif %}
+		        		{% else %}
+		        			<div class="mv2">
+								<svg class="icon icon--s icon-warning dib v-mid fill-black-60"><use xlink:href="#icon-warning"></use></svg>
+								<span class="dib v-mid i black-60">Il n'y a pas de thème en attente</span>
+							</div>
+
+							<div class="b--dashed b--black-20 bb bt bl-0 br-0 mv3 pv3">
+								{% if joggeurForDraftmodeTheme is not null %}
+	        						<strong>Le prochain thème doit être proposé par :</strong>
+									<a class="bg-white-20 br2 mv2 flex flex-auto no-underline" href="{{ path('tds_marathon_joggeur_view', {'id': joggeurForDraftmodeTheme.id}) }}">
+										<div class="thumbnail--m">
+											{% if joggeurForDraftmodeTheme.image is defined or joggeurForDraftmodeTheme.image is not null or joggeurForDraftmodeTheme.image is not empty %}
+												<img class='' src='{{ joggeurForDraftmodeTheme.image.webPath | imagine_filter('tiny_thumb')  }}'/>
+											{% else %}
+									  			<img class='' src="{{ 'uploads/img/anonymous.jpg' | imagine_filter('tiny_thumb') }}" alt="">		
+											{% endif %} 
+										</div>
+										<span class="near-black self-center pl2">
+											{{ joggeurForDraftmodeTheme.pseudo }}
+										</span>
+									</a>
+
+									{% if joggeurForDraftmodeTheme.user is defined and joggeurForDraftmodeTheme.user is not null %}
+										<a class="button dib" href="mailto:{{ joggeurForDraftmodeTheme.user.email }}">
+											<svg class="icon icon--s icon-paperplane dib v-mid"><use xlink:href="#icon-paperplane"></use></svg>
+											<span class="dib v-mid">Lui envoyer un message télépathique</span>
+										</a>
+									{% endif %}
+		        				{% else %}
+		        					<div class="mv2">
+			        					<svg class="icon icon--s icon-warning fill-black-60 dib v-mid"><use xlink:href="#icon-warning"></use></svg>
+										<span class="dib v-mid i black-60">Il n'y a pas d'auteur attitré <br/>(pas de 10ème participant au thème en cours)</span>
+									</div>
+									
+								{% endif %}	
+	    					</div>
+
+	    					<a class="button dib"  href="{{ path('tds_marathon_theme_add_draftmode') }}">
+									<svg class="icon icon--s icon-pencil"><use xlink:href="#icon-pencil"></use></svg>
+									<span class="">Ecrire un thème d'attente</span>
+								</a>
+	    				{% endif %}
+
+	    			{% elseif is_granted("ROLE_USER")  %}
+	    				<div class="">
+	    				{% if joggeurForDraftmodeTheme is not null %}
+	        				{% if app.user.joggeur.id == joggeurForDraftmodeTheme.id %}
+	        					{% if draftmodeTheme is not defined or draftmodeTheme is null %} 
+	        						<div class="mv2 tc">
+	        							
+	        							<div class="w-100 pt2">
+											<img src="{{ '../bundles/tdsmarathon/images/gifs/jesus-pentecote.gif' }}" alt="">
+										</div>
+										<svg class="icon icon--m icon-warning fill-near-black dib v-mid"><use xlink:href="#icon-warning"></use></svg>
+	        							<strong class="f4">Tu es l'élu !</strong><br/> 
+	        							C'est à toi de proposer le prochain thème.
+	        						</div>
+	        						<div class="w-100">
+		        						<a class="button db tc center"  href="{{ path('tds_marathon_theme_add_draftmode') }}">
+												<svg class="icon icon--s icon-pencil"><use xlink:href="#icon-pencil"></use></svg>
+												<span class="btn__label">Ecrire un thème d'attente</span>
+										</a>
+									</div>
+								{% else %}
+									{% if joggeurForDraftmodeTheme == draftmodeTheme.joggeur %}
+										
+										<div class="mv2">
+	        								<svg class="icon icon--s icon-warning fill-near-black dib v-mid"><use xlink:href="#icon-warning"></use></svg>
+	        								<strong class="f5">Tu es l'élu !</strong><br/> 
+	        								Tu as déjà écris le thème en attente mais il est encore temps de le modifier
+	        							</div>
+
+		        							
+		        						<div class="mv2">
+											<a class="button dib" href="{{ path('tds_marathon_theme_edit_draftmode', {'id': draftmodeTheme.id}) }}">
+		  										<svg class="icon icon--s icon-pencil"><use xlink:href="#icon-pencil"></use></svg>
+		  										<span class="">Modifier le thème d'attente</span>
+											</a>
+										</div>
+									{% else %}
+										<div class="mv2">
+	        								<svg class="icon icon--s icon-warning fill-near-black dib v-mid"><use xlink:href="#icon-warning"></use></svg>
+	        								<strong class="f5">Tu es l'élu !</strong><br/> 
+	        								Mais Bob marathon t'a devancé et a écrit le thème d'attente à ta place, vas savoir pourquoi.
+	        							</div>
+										
+									{% endif %}
+								{% endif %}
+	    					{% else %}
+	    						<div class="i black-60">C'est triste à dire mais ce n'est pas à toi d'écrire le futur thème</div>
+	    					{% endif %}
+	    				{% else %}
+	    					<div class="i black-60">Aucun joggeur n'est encore déterminé pour écrire le futur thème</div>
+						{% endif %}
+						</div>
+	        		{% endif %}
+			</div>
+		</div>
+
+
+
+
+		{% if is_granted("ROLE_SUPER_ADMIN")  %}
+			<div class="bt bb b--black-30 pa3">
+				<h4 class="fw4 ma0 pa0 f5">Thème en Cours</h4>								
+				{% if theme is defined and theme is not null %}
+						<div class='closeTheme-wrapper'>
+		        			<a id="closeTheme-grosBouton" data-action="switch-show-brief" class='button-switch no-underline flex flex-auto justify-between bg-near-black w-100 w-90-l center' href="#">
+		        				<svg class="db icon icon--l icon-toggle self-center"><use xlink:href="#icon-toggle"></use></svg>
+		        				<span class="db ms-fushia self-center ph2">Gros bouton qui ferme le thème pour toujours</span>
+		        			</a>
+		        			
+		        			<div id="closeTheme-brief"></div>
+	        			</div>
+	    			
+
+				{% else %}
+					<div class="mv2">
+						<div class="flex flex-auto w-100">
+							<svg class="icon icon--xs fill-black-60"><use xlink:href="#icon-warning"></use></svg>
+							<span class="i dib v-mid black-60">Il n'y a aucun thème en cours</span>
+						</div>
+						{% if draftmodeTheme is not null %}
+							<div class='activeTheme-wrapper'>
+	        					<a id="activeTheme-grosBouton" data-action="active-show-brief" class='button button-special black' href="#">
+	        						<svg class="icon icon--l icon-toggle dib v-mid"><use xlink:href="#icon-toggle"></use></svg>
+	        					</a>
+			        			<span class="">Gros bouton qui active le thème d'attente</span>
+			        			<div id="activeTheme-brief" class="activeTheme-brief mv2 dn">			
+			        				<span class="dark-gray i db mv2">Es-tu sûr de vouloir activer le thème d'attente (qui deviendra le thème en cours)?</span>
+			        				<div>
+			        					<a class="button btn-oui" href="{{ path('tds_marathon_theme_active_validation') }}">oui</a>
+			        					<a class="button btn-non" href="">non</a>
+			        				</div>
+			        				
+			        			</div>
+		        			</div>
+						{% endif %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+
+	{% else %}
+		<div class="">
+			<h3 class="tc">Thèmes</h3>
+	        <div class="i dark-gray">Il n'y a pas de saison en cours, par conséquent, tu ne peux pas agir sur les thèmes.
+	        </div> 
+	    </div>
+	{% endif %}
+{% endmacro %}
+
+
+
+
+
+
+

@@ -1,0 +1,131 @@
+{% extends "TdSMarathonBundle::layout.html.twig" %}
+
+{% block title %}
+  Marathon - {{ parent() }}
+{% endblock %}
+
+{% block tdsmarathon_body %}
+	{% import "TdSCoreBundle:Macros:vignettes.html.twig" as vignetteModule %}
+	
+	<div id="content" class="pa3 pa4-l">
+		
+	<div class="ma0 tc b--dashed b--black-20 bb bt-0 br-0 bl-0 pb3 mb3">
+		<div class="flex flex-auto justify-center w-100 mt4">	
+			<h1 class="self-center pr2 ma0 new-rocker f2">
+				<svg class="icon icon--s"><use xlink:href="#icon-heartadd"></use></svg>
+				<span>Attribuer des points bisous</span>
+			</h1>
+			<div>
+				<span class="button-becky db" data-info="C'est ici que tu répartis tes points coeurs, tu as une semaine pour le faire.<br/>Prends ton temps et sinon, c'est en faisant des erreurs qu'on apprend.<br/>Par contre, si tu as oublié de les dépenser ils seront retirés de ton score et un mail sera directement envoyé à la CAF de ta région pour un rendez-vous de contrôle." data-btn-becky>
+	        		{% set webpath = "bundles/tdsbecky/images/rebecca.png" %}
+	    			<img class="w-100 db" src="{{ webpath | imagine_filter('becky_thumb') }}" alt="becky">
+	        	</span>
+	        </div>
+   		</div>
+
+        {% if themePost is defined and themePost is not null %}
+        	<div class="w-100 pt2">
+        		<div class="pb3">
+			    	<h2 class="ma0 fw1">theme</h2>
+			    	<div class="w-100 w-80-sm w-60-m w-50-l center">
+			    		{{ vignetteModule.vignette_line_theme(themePost) }}
+			    	</div>
+				</div>
+			    <div class="pl4 f5">
+			    	<span>nombre de points disponibles :</span>
+			    	<div class="bg-near-black ms-fushia dib pa2">
+			    		<span class='joggeurDonneur-points'>{{ scoreJoggeurParTheme.pointstogive }}</span>
+				    	 / 
+				    	<span class='joggeurDonneur-pointsInit'>{{ scoreJoggeurParTheme.pointstogive }}</span>
+			    	</div>
+				</div>
+			</div>
+        {% else %}
+        	<div class="w-100 pt2">
+			    <h2 class="ma0 fw1">theme : {{ themePost.titre }}</h2>
+			</div>
+    	{% endif %}
+    </div>
+
+		{% if themePost is defined and themePost is not null %}
+			
+		
+
+			{% if themePost.musicTitles is defined and themePost.musicTitles is not null %}
+				<div class='flex flex-auto flex-wrap justify-between'>
+					{% for musicTitle in themePost.musicTitles %}					
+						{% if musicTitle is not null %}
+							{% if musicTitle.joggeur.id != app.user.joggeur.id %}
+								<div class='w-100 w-100-sm w-100-m w-50-l pa2'>
+									<div class="flex flex-auto flex-wrap justify-between bg-white-40 pa2">
+										<div class="w-100 w-100-l">
+											<h3 class="ma0 f6">{{ musicTitle.joggeur.pseudo }}</h3>
+											<span class="block">morceau : <i>{{ musicTitle.titre }}</i></span>
+										</div>
+
+										
+										<div class='heartPoints-icons cf self-end w-100 w-100-l' data-idJoggeur='{{ musicTitle.joggeur.id }}'>	
+											{% for i in 20..1  %}
+												<span class="heartPoints-icon fr" data-heart='{{ i }}'>
+													<svg class="icon icon--xs pl1" ><use xlink:href="#icon-heart2"></use></svg>
+												</span>
+											{% endfor %}
+											<span class="heartPoints-icon heart-empty fr" data-heart='0'>
+												<svg class="icon icon--xs pr1"><use xlink:href="#icon-none"></use></svg>
+											</span>
+										</div>						
+									</div>
+								</div>
+							{% endif %}
+
+						{% else %}
+							<div class="tc">Shocking! personne n'a participé à ce thème!</div>
+						{% endif %}
+						
+					{% endfor %}
+				</div>
+
+				
+
+				<div class='addPoints-form'>
+					{{ form_start(form) }}
+					    {{ form_row(form.remainingPoints, {'attr': {'value': scoreJoggeurParTheme.pointstogive}}) }}
+					    <ul class="tags score-tags dn">
+					        {% for tag in form.tags %}
+					            <li class="form-joggeur-item">
+					            	{{ form_widget(tag.idJoggeur, {'attr': {'class': 'tag-idJoggeur'}}) }}
+					            	{{ form_widget(tag.heartPoints, {'attr': {'class': 'tag-heartPoints'}}) }}
+					            </li>
+					        {% endfor %}
+					    </ul>
+
+					    <div class="flex flex-auto flex-wrap justify-center pb3">
+					    	<div>
+					            <div class="button button-save dib">
+					              <svg class="icon icon--xs icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+					               {{ form_widget(form.valider, {'attr': {'value': 'valider'}}) }}
+					            </div>
+					        
+					            <div class="button button-save"> 
+					               <svg class="icon icon--xs"><use xlink:href="#icon-spinner11"></use></svg>
+									<span>réactualiser</span>
+					            </div>
+					        </div>
+				      	</div>
+					
+					
+					{{ form_end(form) }}
+				</div>
+			{% else %}
+				<div class="tc">
+			    	<h2 class="ma0">Aucun joggeur n'a posté de morceau pour ce thème, cela est extrêmement choquant</h2>
+				</div>
+			{% endif %}
+		{% else %}
+			<div class="tc">
+				<h2 class="ma0">Il n'y a pas de thème ouvert à l'attribution de points bisous</h2>
+			</div>
+		{% endif %}	
+	</div>
+
+{% endblock %}

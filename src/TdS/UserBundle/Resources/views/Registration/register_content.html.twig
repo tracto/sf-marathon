@@ -1,0 +1,64 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+<div id="content" class="form-container">
+
+  <h1 class="ms-title">
+      <svg class="self-center icon icon--s mr2 fill-near-black"><use xlink:href="#icon-plus"></use></svg>
+      <span class="self-center">Nouvel Utilisateur</span>
+  </h1>
+
+
+  <div class="form-wrapper">
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos-form fos_user_registration_register">
+    	<div class="form-group">
+      	<div class="form-flex justify-center mb3">
+            {{ form_label(form.username, "Utilisateur", {'label_attr': {'class': 'form-label control-label'}}) }}
+            {{ form_errors(form.username) }}
+            <div class="form-widget">
+              {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+       
+        <div class="form-flex justify-center">
+            {{ form_label(form.email, "email", {'label_attr': {'class': 'form-label control-label'}}) }}
+            {{ form_errors(form.email) }}
+            <div class="form-widget">
+              {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+      </div>
+    	
+       
+    
+      <div class="form-group form-flex justify-between">
+    	  <div class="form-flex justify-center">
+          {{ form_label(form.plainPassword.first, "Mot de Passe", {'label_attr': {'class': 'form-label control-label'}}) }}
+          {{ form_errors(form.plainPassword.first) }}
+          <div class="form-widget">
+            {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+          </div>
+        </div>
+       
+        <div class="form-flex justify-center">
+          {{ form_label(form.plainPassword.second, "Confirmation du mot de passe", {'label_attr': {'class': 'form-label control-label'}}) }}
+          {{ form_errors(form.plainPassword.second) }}
+          <div class="form-widget">
+            {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+          </div>
+        </div>
+    	</div>
+
+        {{ form_rest(form) }} 
+
+
+        <div class="center tc">
+          <div class="button button-save">
+            <svg class="icon icon--xs icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+             <button class="" type="submit">créer</button>
+          </div>
+        </div>
+        
+    </form>
+  </div>
+</div>

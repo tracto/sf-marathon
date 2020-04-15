@@ -1,0 +1,69 @@
+<div class="form-wrapper">
+   {{ form_start(form, {'attr': {'class': 'form-horizontal','id': 'form-addmusictitle'}}) }}
+    {{ form_errors(form) }}
+
+      <div class="form-group form-flex form-input-title f4">     
+        {{ form_label(form.titre, "titre", {'label_attr': {'class': 'form-label control-label'}}) }}
+        {{ form_errors(form.titre) }}
+        <div class="form-widget w-100 w-70-ns">
+          {{ form_widget(form.titre) }}
+        </div>
+      </div>
+
+      {% if is_granted("ROLE_SUPER_ADMIN") %} 
+        <div class="form-group">
+          <div class="w-100 form-flex">
+            {{ form_label(form.theme, "thème", {'label_attr': {'class': 'form-label control-label'}}) }}
+            {{ form_errors(form.theme) }}
+            <div class="form-widget w-100 w-70-ns">
+              {{ form_widget(form.theme, {'attr': {'label_attr': 'form-control w-100'}}) }}
+            </div>
+          </div>
+      
+
+      
+          <div class="w-100 form-flex mt3">
+            {{ form_label(form.joggeur, "joggeur", {'label_attr': {'class': 'form-label control-label'}}) }}
+            {{ form_errors(form.joggeur) }}
+            <div class="form-widget tc w-100 w-70-ns">
+              {{ form_widget(form.joggeur, {'attr': {'class': 'form-control'}}) }}
+            </div>
+          </div>
+        </div>
+      {% endif %} 
+    
+
+
+      <div class="form-group">
+                
+        <div class="form-flex">
+            {{ form_label(form.file, "fichier audio", {'label_attr': {'class': 'form-label control-label'}}) }}
+            
+            <div class='form-widget'>
+              {{ form_widget(form.file) }}
+              <span class='db i f7 dark-gray'>
+                Format du fichier : mp3 / Taille maximum : 10Mo
+              </span>
+
+              <div id="loading-file" class="flex flex-auto flex-wrap">
+                <div id="loading" class="dn w-100 w-30-ns">
+                    {{ loaderModule.loader() }} 
+                </div>
+                <span class="db w-100 w-70-ns"></span>
+              </div>
+            </div>
+        </div>
+
+        <div class="w-100 form-error">{{ form_errors(form.file) }}</div>      
+      </div>
+
+
+      <div class="center tc">
+        <div class="button button-save">
+          <svg class="icon icon--xs icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+           {{ form_widget(form.valider, {'attr': {'value':'valider'}}) }}
+        </div>
+      </div>
+
+  {{ form_end(form) }} 
+</div>

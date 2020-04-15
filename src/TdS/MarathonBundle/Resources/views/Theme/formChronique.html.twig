@@ -1,0 +1,22 @@
+<div class="form-wrapper">
+  {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+  {{ form_errors(form) }}
+
+  <div class="form-group form-flex justify-center">
+      {{ form_label(form.chronique, "Chronique", {'label_attr': {'class': 'form-label control-label'}}) }}
+      {{ form_errors(form.chronique) }}
+    <div class="form-widget">
+      {{ form_widget(form.chronique) }}
+    </div>
+  </div>
+
+  <div class="tc">
+    <div class="button button-save">
+      <svg class="icon icon--s icon-checkmark"><use xlink:href="#icon-checkmark"></use></svg>  
+      {{ form_widget(form.valider, {'attr': {'value': 'valider'}}) }}
+    </div>
+  </div>
+
+  {{ form_end(form) }} 
+</div>

@@ -1,0 +1,27 @@
+services:
+   
+    tds_marathon.saison:
+        class:  TdS\MarathonBundle\Services\TdSSaison
+        arguments: [ @doctrine.orm.entity_manager ] 
+
+
+    tds_marathon.scoring:
+        class:  TdS\MarathonBundle\Services\TdSScoring
+        arguments: [ @doctrine.orm.entity_manager ]
+
+
+    tds_marathon.theme:
+        class:  TdS\MarathonBundle\Services\TdSTheme
+        arguments: [ @doctrine.orm.entity_manager ]
+
+    tds_marathon.hotfresh:
+        class:  TdS\MarathonBundle\Services\TdSHotfresh
+        arguments: [ @doctrine.orm.entity_manager]
+
+
+
+    string.toolbox:
+        class:  TdS\MarathonBundle\Services\StringToolbox
+        
+
+

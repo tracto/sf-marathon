@@ -1,0 +1,12 @@
+{% extends "TdSUserBundle::layout-admin.html.twig" %}
+
+{% block title %}
+  Marathon - {{ parent() }}
+{% endblock %}
+
+{% block tdsadmin_body %}
+	 <div id="content" class="form-container">
+	<h1 class='ms-title align-center f2'>Modification de l'utilisateur: {{ user.username }}</h1>
+		{{ include('TdSUserBundle:Admin:form.html.twig') }}
+	</div>
+{% endblock %}

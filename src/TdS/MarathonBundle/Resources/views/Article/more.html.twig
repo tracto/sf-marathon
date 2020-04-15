@@ -1,0 +1,10 @@
+{% import "TdSCoreBundle:Macros:article-wrapper.html.twig" as articleWrapperModule %}
+
+{% if listeArticles is defined and listeArticles is not null %}
+	{% for article in listeArticles %}
+		{{ articleWrapperModule.article(article) }}
+		<div class="w-100">
+			<svg class="db icon fill-near-black tc w-60 w-50-l center"><use xlink:href="#icon-spare"></use></svg>
+		</div>
+	{% endfor %}
+{% endif %}
