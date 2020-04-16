@@ -57,22 +57,14 @@ class MusicTitleRepository extends \Doctrine\ORM\EntityRepository
 
 
 
-  // public function findAllByTheme(Theme $theme){
-  //     $queryBuilder = $this->createQueryBuilder('c') 
-  //         ->addSelect('c','j','t','it','ij')
-  //         ->leftJoin('c.theme','t')
-  //         ->where('t.id IN (:id)')
-  //         ->setParameter('id', $themesId)
-  //         ->leftJoin('t.image', 'it')
-  //         ->leftJoin('c.joggeur', 'j') 
-  //         ->leftJoin('j.image', 'ij')         
-  //         ;
-                   
-          
-  //     return $queryBuilder
-  //         ->getQuery()
-  //         ->getResult();
-  // }
+	public function getcountByTheme(Theme $theme){
+			$queryBuilder =$this->_em->createQueryBuilder()
+				->select("COUNT(a.id) as totalTitle")
+				->from($this->_entityName,'a')
+				->where('a.theme = :theme')
+				   ->setParameter('theme', $theme);
+			return $queryBuilder->getQuery()->getOneOrNullResult();
+	}
 
 
 
@@ -95,13 +87,9 @@ class MusicTitleRepository extends \Doctrine\ORM\EntityRepository
 
 
 	public function findAllDurations(){
-
-
 		$queryBuilder =$this->_em->createQueryBuilder()
 			->select("SUM(a.duration) * 10 / 3600 as kilometrage, SUM(a.duration) as temps")
 			->from($this->_entityName,'a');
-        	
-    
 		return $queryBuilder->getQuery()->getOneOrNullResult();
 	}
 

@@ -257,7 +257,9 @@ class ThemeController extends Controller{
 
  
 		    $threeThemes = $em->getRepository('TdSMarathonBundle:Theme')
-		    					->find3Themes();
+								->find3Themes();
+								
+			
 
 		    $draftModeTheme=null;
 		    $currentTheme=null;
@@ -271,7 +273,10 @@ class ThemeController extends Controller{
 		    	}elseif($themeItem->getStatut()==2){
 		    		$postTheme=$themeItem;
 		    	}
-		    }
+			}
+
+			$musicTitleTotalCount= $em->getRepository('TdSMarathonBundle:MusicTitle')
+								->getcountByTheme($currentTheme);
 
 		    if($postTheme){
 		    	$tdsScore->setTakenPointsToJoggeurs($saison,$postTheme);
@@ -284,7 +289,7 @@ class ThemeController extends Controller{
 	  				if($joggeursDuTheme[0] && $currentTheme){
 	  					$joggeurScore=$joggeurDuTheme->getJoggeurScore();
             			$currentTheme->setJoggeurChronique($joggeursDuTheme[0]);
-            			$joggeurScore->setPointstogive(40);            
+            			$joggeurScore->setPointstogive($musicTitleTotalCount['totalTitle']/2);            
         			}
 	  			}
 	  		}

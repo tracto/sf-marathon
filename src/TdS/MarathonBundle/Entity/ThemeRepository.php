@@ -71,6 +71,9 @@ class ThemeRepository extends \Doctrine\ORM\EntityRepository{
     }
 
 
+    
+
+
     public function findOneThemeByStatut($statut){
       $queryBuilder=$this->_em->createQueryBuilder('a')
         ->addselect('a','i','j','ji','jc','jci','m','mj','th')
@@ -99,7 +102,7 @@ class ThemeRepository extends \Doctrine\ORM\EntityRepository{
           ->andWhere('a.statut IN (:statuts)')
           ->setParameter('statuts', $statuts) 
           ->from($this->_entityName,'a')
-          ->leftJoin('a.image','i')                  
+          ->leftJoin('a.image','i')                
           ;
 
           return $queryBuilder
