@@ -2319,7 +2319,7 @@ button { cursor: pointer; }
 .fos_comment_comment_form_body { height: 50px; }
 .fos_comment_comment_form_content textarea { background-color: rgba( 255, 255, 255, .5 ); border: none; height: auto; width: 100%; height: 100%; }
 .fos_comment_comment_body_wrapper { padding: 0 0 20px 0; }
-.fos_comment_comment_body { padding: 10px; word-break: break-all; }
+.fos_comment_comment_body { padding: 10px;  }
 .fos_comment_comment_depth_0 { margin-left: 2rem; }
 .fos_comment_comment_depth_0:before { background: transparent !important; }
 .fos_comment_comment_replies { margin-left: 10px; padding-bottom: 20px; }
