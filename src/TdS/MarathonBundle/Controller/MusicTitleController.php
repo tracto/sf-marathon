@@ -59,24 +59,29 @@ class MusicTitleController extends Controller{
 
 		    $form=$this->get('form.factory')->create(new MusicTitleType(), $musicTitle); 
 			$form->handleRequest($request);
+			
+				if($form->isValid()){				
+					/* TODO verifier que le joggeur na pas deja un track sur ce theme */
+					if($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN') || ($theme->getStatut()==1 && $this->get('security.context')->isGranted('ROLE_USER'))){			
+						$em=$this->getDoctrine()->getManager();
+						$em->persist($musicTitle);
+						$em->flush();
+						
+						$request->getSession()->getFlashBag()->add('notice',"Ton morceau a été ajouté! Tes points vitesse seront comptabilisés lors de la fermeture du thème. En attendant, je t'invite à aller voir si tu as des points bisous à donner pour le thème précédent (si tu y avais participé).");
+						return $this->redirect($url);
+					}else{
+						$request->getSession()->getFlashBag()->add('notice',"Tu as trop tardé à poster ton morceau, Bob Marathon vient de fermer ce thème. Dommage.");
+						return $this->redirectToRoute('tds_dashboard');
+					}
+				}
 
-			if($form->isValid()){
-                                
-                            /* TODO verifier que le joggeur na pas deja un track sur ce theme */
-                            
-				$em=$this->getDoctrine()->getManager();
-				$em->persist($musicTitle);
-				$em->flush();
-				
-				$request->getSession()->getFlashBag()->add('notice',"Ton morceau a été ajouté! Tes points vitesse seront comptabilisés lors de la fermeture du thème. En attendant, je t'invite à aller voir si tu as des points bisous à donner pour le thème précédent (si tu y avais participé).");
-				return $this->redirect($url);
-			}
+				return $this->render('TdSMarathonBundle:MusicTitle:add.html.twig', array(
+											'theme'=>$theme,
+											'joggeur'=>$joggeur,
+											'form'=>$form->createView()
+				));
 
-	        return $this->render('TdSMarathonBundle:MusicTitle:add.html.twig', array(
-	        							'theme'=>$theme,
-	        							'joggeur'=>$joggeur,
-	        							'form'=>$form->createView()
-	        ));
+			
 
         }else{
 		    	$request->getSession()->getFlashBag()->add('notice',"tu n'as pas le droit d'effectuer cette action.");
