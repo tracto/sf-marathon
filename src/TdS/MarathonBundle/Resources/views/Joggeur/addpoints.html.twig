@@ -55,7 +55,7 @@
 				<div class='flex flex-auto flex-wrap justify-between'>
 					{% for musicTitle in themePost.musicTitles %}					
 						{% if musicTitle is not null %}
-							{% if musicTitle.joggeur.id != app.user.joggeur.id %}
+							{% if musicTitle.joggeur.id != app.user.joggeur.id and musicTitle.joggeur.joggeurScore!= null %}
 								<div class='w-100 w-100-sm w-100-m w-50-l pa2'>
 									<div class="flex flex-auto flex-wrap justify-between bg-white-40 pa2">
 										<div class="w-100 w-100-l">
@@ -98,6 +98,8 @@
 					            </li>
 					        {% endfor %}
 					    </ul>
+
+						<div class="tc pv3"><i>Info : si un joggeur n'apparait pas dans la liste des points bisous, c'est parce que son titre a été ajouté après la fermeture du thème, il est donc hors compèt'</i></div>
 
 					    <div class="flex flex-auto flex-wrap justify-center pb3">
 					    	<div>

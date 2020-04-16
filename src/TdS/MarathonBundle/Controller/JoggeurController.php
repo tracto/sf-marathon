@@ -267,6 +267,9 @@ class JoggeurController extends Controller{
     }
 
 
+
+
+
     public function addpointsAction(Joggeur $joggeur, $id, Request $request){
       $em=$this->getDoctrine()->getManager(); 
       $joggeur=$em->getRepository('TdSMarathonBundle:Joggeur')
@@ -290,86 +293,97 @@ class JoggeurController extends Controller{
           if($themePost){
             $musicTitlesDuTheme=$themePost->getMusicTitles();
             
+            if(count($musicTitlesDuTheme)>=1){
+              $scoreJoggeurParTheme=$em->getRepository('TdSMarathonBundle:JoggeurScore')
+                              ->findJoggeurParTheme($joggeur,$themePost);
+              if(!empty($scoreJoggeurParTheme)){
+                  $scoreJoggeurParTheme=$scoreJoggeurParTheme[0];
+              }
+              
+              
 
-            $scoreJoggeurParTheme=$em->getRepository('TdSMarathonBundle:JoggeurScore')
-                             ->findJoggeurParTheme($joggeur,$themePost);
-            if(!empty($scoreJoggeurParTheme)){
-                $scoreJoggeurParTheme=$scoreJoggeurParTheme[0];
-            }
+              foreach($musicTitlesDuTheme as $musicTitleDuTheme){
+                  if (!$joggeursDuTheme->contains($musicTitleDuTheme->getJoggeur())) {
+                      $joggeursDuTheme->add($musicTitleDuTheme->getJoggeur());
+                  }
+              }
+
+              $task=new Task();
             
+              foreach($joggeursDuTheme as $joggeurDuTheme){            
+                      $tag=new Tag();
+                      $tag->idJoggeur=$joggeurDuTheme->getId();
+                      $tag->heartPoints=0;
+                      $task->getTags()->add($tag);            
+              }
+              
+              $form=$this->createForm(new TaskType(),$task);
+              
+              $form->handleRequest($request);
+              $joggeurPointstogive_old=$joggeur->getJoggeurScore()->getPointstogive();
+              if ($form->isSubmitted() && $form->isValid()) {
 
-            foreach($musicTitlesDuTheme as $musicTitleDuTheme){
-                if (!$joggeursDuTheme->contains($musicTitleDuTheme->getJoggeur())) {
-                    $joggeursDuTheme->add($musicTitleDuTheme->getJoggeur());
+                    $joggeur=$em->getRepository('TdSMarathonBundle:Joggeur')
+                              ->findOneBy(array('id' => $id));
+
+                    $joggeur->getJoggeurScore()->setPointstogive($task->getRemainingPoints());
+                    $em->persist($joggeur);
+                    
+                    $tags=$form->get('tags')->getData();
+                    
+                    $totalGivenHearts=0;
+                    
+                    foreach($tags as $tag){
+                      $idJoggeur=$tag->idJoggeur;
+                      $joggeurHeart=$em->getRepository('TdSMarathonBundle:Joggeur')
+                        ->findOneBy(array('id' => $idJoggeur));
+                      $scoreJoggeurHeart=$em->getRepository('TdSMarathonBundle:JoggeurScore')
+                        ->findOneJoggeurParTheme($joggeurHeart,$themePost);
+
+                        if(!is_null($scoreJoggeurHeart)){
+                          $scoresHeart=$scoreJoggeurHeart->getScores();
+                          
+                          foreach($scoresHeart as $scoreHeart){
+                            $scoreHeart->setHeartpoints($tag->heartPoints+$scoreHeart->getHeartpoints());
+                            $scoreJoggeurHeart->setScore($scoreHeart);
+                            $em->persist($scoreJoggeurHeart); 
+                          }
+                          $totalGivenHearts=$tag->heartPoints+$totalGivenHearts;
+                        }                                      
+                    }
+                    if($totalGivenHearts<=$joggeurPointstogive_old){
+                      $em->flush();
+                      $em->clear();
+                      $request->getSession()->getFlashBag()->add('notice',"Points bisous attribués avec succès ( ".$totalGivenHearts." / ".$joggeurPointstogive_old." pts )");
+                    }else{
+                      $request->getSession()->getFlashBag()->add('notice',"je sais pas ce que tu as essayé de faire mais tu as manifestement donné plus de points bisous qu'il n'y avait dans ta cagnotte.<br/> 
+                        Nous allons donc signaler ton comportement à la caf de ta région");
+                    }
+                    
+                    return $this->redirectToRoute('tds_dashboard');
                 }
-            }
 
-            $task=new Task();
-          
-            foreach($joggeursDuTheme as $joggeurDuTheme){            
-                    $tag=new Tag();
-                    $tag->idJoggeur=$joggeurDuTheme->getId();
-                    $tag->heartPoints=0;
-                    $task->getTags()->add($tag);            
-            }
-            
-            $form=$this->createForm(new TaskType(),$task);
-             
-            $form->handleRequest($request);
-            $joggeurPointstogive_old=$joggeur->getJoggeurScore()->getPointstogive();
-            if ($form->isSubmitted() && $form->isValid()) {
+                $form=$form->createView();
+              }else{
+                $request->getSession()->getFlashBag()->add('notice',"Il n'y a pas de titre dans ce thème, Tu ne peux donc pas donner tes bisous. C'est extrêmement injuste mais c'est comme ça. Nous te conseillons de te plaindre à la direction.");
+                return $this->redirectToRoute('tds_dashboard');
+              }
 
-                  $joggeur=$em->getRepository('TdSMarathonBundle:Joggeur')
-                             ->findOneBy(array('id' => $id));
-
-                  $joggeur->getJoggeurScore()->setPointstogive($task->getRemainingPoints());
-                  $em->persist($joggeur);
-                  
-                  $tags=$form->get('tags')->getData();
-                  $totalGivenHearts=0;
-                  foreach($tags as $tag){
-                            $idJoggeur=$tag->idJoggeur;
-                            $joggeurHeart=$em->getRepository('TdSMarathonBundle:Joggeur')
-                               ->findOneBy(array('id' => $idJoggeur));
-                            $scoreJoggeurHeart=$em->getRepository('TdSMarathonBundle:JoggeurScore')
-                               ->findOneJoggeurParTheme($joggeurHeart,$themePost);
-                            
-                              $scoreJoggeurHeart=$scoreJoggeurHeart;
-                            
-                            $scoresHeart=$scoreJoggeurHeart->getScores();
-                            foreach($scoresHeart as $scoreHeart){
-                               $scoreHeart->setHeartpoints($tag->heartPoints+$scoreHeart->getHeartpoints());
-                               $scoreJoggeurHeart->setScore($scoreHeart);
-                               $em->persist($scoreJoggeurHeart); 
-                            }
-                            $totalGivenHearts=$tag->heartPoints+$totalGivenHearts;                                        
-                  }
-                  if($totalGivenHearts<=$joggeurPointstogive_old){
-                    $em->flush();
-                    $em->clear();
-                    $request->getSession()->getFlashBag()->add('notice',"Points bisous attribués avec succès ( ".$totalGivenHearts." / ".$joggeurPointstogive_old." pts )");
-                  }else{
-                    $request->getSession()->getFlashBag()->add('notice',"je sais pas ce que tu as essayé de faire mais tu as manifestement donné plus de points bisous qu'il n'y avait dans ta cagnotte.<br/> 
-                      Nous allons donc signaler ton comportement à la caf de ta région");
-                  }
-                  
-                  return $this->redirectToRoute('tds_dashboard');
-            }
-
-            $form=$form->createView();
-
-          }else{
-            $scoreJoggeurParTheme="";
-            $form="";
-          }         
-
-      	return $this->render('TdSMarathonBundle:Joggeur:addpoints.html.twig',array(
-        	  		'joggeur'=>$joggeur,
-                'joggeursDuTheme'=>$joggeursDuTheme,
-        	  		'themePost'=>$themePost,
-                'scoreJoggeurParTheme'=>$scoreJoggeurParTheme,
-                'form'=>$form
-  	  		));
+            }else{
+              $scoreJoggeurParTheme="";
+              $form="";
+              $request->getSession()->getFlashBag()->add('notice',"Un noueau thème a été ajouté, ce thème s'est donc fermé à l'attribution des points bisous avant que tu aies pu les attribuer.");
+              return $this->redirectToRoute('tds_dashboard');
+            }         
+         
+          return $this->render('TdSMarathonBundle:Joggeur:addpoints.html.twig',array(
+                  'joggeur'=>$joggeur,
+                  'joggeursDuTheme'=>$joggeursDuTheme,
+                  'themePost'=>$themePost,
+                  'scoreJoggeurParTheme'=>$scoreJoggeurParTheme,
+                  'form'=>$form
+            ));
+        
 
       }else{
         $request->getSession()->getFlashBag()->add('notice',"tu n'as pas le droit d'effectuer cette action.");

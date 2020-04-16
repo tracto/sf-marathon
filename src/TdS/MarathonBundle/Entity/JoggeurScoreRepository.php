@@ -140,7 +140,7 @@ class JoggeurScoreRepository extends \Doctrine\ORM\EntityRepository {
 
     public function findOneJoggeurParTheme(Joggeur $joggeur, Theme $theme){
       $queryBuilder = $this->createQueryBuilder('c')
-          ->addSelect('c','m')
+          ->addSelect('m')
           ->leftJoin('c.scores', 'm')
           ->where('m.theme = :theme')
           ->setParameter('theme', $theme)
