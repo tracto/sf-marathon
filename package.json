@@ -8,7 +8,7 @@
     "autoprefixer": "^5.2.0",
     "cssnano": "^2.6.1",
     "grunt": "^1.1.0",
-    "grunt-contrib-stylus": "^0.22.0",
+    "grunt-contrib-stylus": "^1.2.0",
     "poststylus": "^0.2.0",
     "tachyons": "^4.6.1"
   }
